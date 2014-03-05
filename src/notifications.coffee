@@ -40,7 +40,7 @@ app.directive "notifications", ["Notifications", (Notifications) ->
 				ng-repeat="(id, message) in notifications.messages"
 				ng-class="message.type === notifications.ALERT ? 'alert' : ''"
 				ng-click="notifications.remove(id)"
-				ng-animate="'fade'"
+				class="notification"
 				ng-bind="message.content">
 			</li>
 		</ul>
