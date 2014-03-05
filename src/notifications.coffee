@@ -46,6 +46,7 @@ app.directive "notifications", ["Notifications", (Notifications) ->
 		</ul>
 	"""
 	scope: {}
+	replace: true
 	restrict: "E"
 	link: (scope, element, attributes) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout

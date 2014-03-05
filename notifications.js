@@ -59,6 +59,7 @@
       return {
         template: "<ul class=\"notifications\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"message.type === notifications.ALERT ? 'alert' : ''\"\n		ng-click=\"notifications.remove(id)\"\n		ng-animate=\"'fade'\"\n		ng-bind=\"message.content\">\n	</li>\n</ul>",
         scope: {},
+        replace: true,
         restrict: "E",
         link: function(scope, element, attributes) {
           if (attributes.timeout) {
