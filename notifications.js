@@ -33,11 +33,12 @@
         var id, timer;
         id = generateUuid();
         timer = this.setTimer(id, this.timeout * msg.length);
-        return this.messages[id] = {
+        this.messages[id] = {
           timer: timer,
           content: msg,
           type: msgType
         };
+        return id;
       },
       setTimer: function(id, duration) {
         var _this = this;
@@ -46,8 +47,10 @@
         }, duration);
       },
       remove: function(id) {
-        $timeout.cancel(this.messages[id].timer);
-        return delete this.messages[id];
+        if (this.messages[id]) {
+          $timeout.cancel(this.messages[id].timer);
+          return delete this.messages[id];
+        }
       }
     };
   });
@@ -62,10 +65,7 @@
         if (attributes.timeout) {
           Notifications.setTimeout(parseInt(attributes.timeout, 10));
         }
-        scope.notifications = Notifications;
-        return scope.$on("$routeChangeStart", function() {
-          return Notifications.remove();
-        });
+        return scope.notifications = Notifications;
       }
     };
   });
