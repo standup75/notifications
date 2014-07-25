@@ -1,6 +1,6 @@
 app = angular.module("notifications", [])
 
-app.factory "Notifications", ["$timeout", ($timeout) ->
+app.factory "Notifications", ($timeout) ->
 	generateUuid = ->
 		d = new Date().getTime()
 		"xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace /[xy]/g, (c) ->
@@ -22,6 +22,7 @@ app.factory "Notifications", ["$timeout", ($timeout) ->
 			timer: timer
 			content: msg
 			type: msgType
+		id
 	setTimer: (id, duration) ->
 		$timeout =>
 			@remove id 
@@ -29,10 +30,8 @@ app.factory "Notifications", ["$timeout", ($timeout) ->
 	remove: (id) ->
 		$timeout.cancel @messages[id].timer
 		delete @messages[id]
-]
 
-
-app.directive "notifications", ["Notifications", (Notifications) ->
+app.directive "notifications", (Notifications) ->
 
 	template: """
 		<ul class="notifications">
@@ -51,4 +50,3 @@ app.directive "notifications", ["Notifications", (Notifications) ->
 	link: (scope, element, attributes) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout
 		scope.notifications = Notifications
-]
