@@ -28,8 +28,9 @@ app.factory "Notifications", ($timeout) ->
 			@remove id 
 		, duration
 	remove: (id) ->
-		$timeout.cancel @messages[id].timer
-		delete @messages[id]
+		if @messages[id]
+			$timeout.cancel @messages[id].timer
+			delete @messages[id]
 
 app.directive "notifications", (Notifications) ->
 
