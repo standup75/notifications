@@ -10,8 +10,6 @@
   "main": "./notifications.js",
   "version": "0.0.3",
   "dependencies": {
-    "angular": "~1.2.10",
-    "angular-animate": "~1.2.10",
-    "angular-route": "~1.2.10"
+    "angular": "^1.2.10"
   }
 }
