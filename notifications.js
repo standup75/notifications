@@ -19,7 +19,7 @@
       MESSAGE: 0,
       ALERT: 1,
       messages: {},
-      timeout: 100,
+      timeout: 1000,
       sendMessage: function(msg) {
         return this._addMessage(msg, this.MESSAGE);
       },
@@ -59,7 +59,6 @@
     return {
       template: "<ul class=\"notifications\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"message.type === notifications.ALERT ? 'alert' : ''\"\n		ng-click=\"notifications.remove(id)\"\n		class=\"notification\"\n		ng-bind=\"message.content\">\n	</li>\n</ul>",
       scope: {},
-      replace: true,
       restrict: "E",
       link: function(scope, element, attributes) {
         if (attributes.timeout) {

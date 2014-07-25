@@ -142,6 +142,11 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.dist %>',
           dest: '',
           src: [ '*.js' ]
+        },{
+          expand: true,
+          cwd: 'demo/styles',
+          src: '*.css',
+          dest: ''
         }]
       }
     }

@@ -11,7 +11,7 @@ app.factory "Notifications", ($timeout) ->
 	MESSAGE: 0
 	ALERT: 1
 	messages: {}
-	timeout: 100
+	timeout: 1000
 	sendMessage: (msg) -> @_addMessage msg, @MESSAGE
 	sendAlert: (alert) -> @_addMessage alert, @ALERT
 	setTimeout: (timeout) -> @timeout = timeout
@@ -46,7 +46,6 @@ app.directive "notifications", (Notifications) ->
 		</ul>
 	"""
 	scope: {}
-	replace: true
 	restrict: "E"
 	link: (scope, element, attributes) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout
