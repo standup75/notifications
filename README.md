@@ -23,9 +23,10 @@ As you can see, I have not written any stylesheet for this module, it's up to yo
 
 Usage
 -----
-		<notifications timeout="100"></notifications>
+		<notifications timeout="100" position="bottom"></notifications>
 
-Where timeout is the time during which the notification should stay on the screen in ms/char
+Where `timeout` is the time during which the notification should stay on the screen in ms/char
+and `position` define if the notifications should appear at the top or the bottom of the screen
 
 And don't forget to add the module to your application
 

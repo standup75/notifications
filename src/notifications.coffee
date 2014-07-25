@@ -11,7 +11,7 @@ app.factory "Notifications", ($timeout) ->
 	MESSAGE: 0
 	ALERT: 1
 	messages: {}
-	timeout: 1000
+	timeout: 100
 	sendMessage: (msg) -> @_addMessage msg, @MESSAGE
 	sendAlert: (alert) -> @_addMessage alert, @ALERT
 	setTimeout: (timeout) -> @timeout = timeout
@@ -35,10 +35,10 @@ app.factory "Notifications", ($timeout) ->
 app.directive "notifications", (Notifications) ->
 
 	template: """
-		<ul class="notifications">
+		<ul class="notifications {{position}}">
 			<li
 				ng-repeat="(id, message) in notifications.messages"
-				ng-class="message.type === notifications.ALERT ? 'alert' : ''"
+				ng-class="{ alert: message.type === notifications.ALERT }"
 				ng-click="notifications.remove(id)"
 				class="notification"
 				ng-bind="message.content">
@@ -50,3 +50,4 @@ app.directive "notifications", (Notifications) ->
 	link: (scope, element, attributes) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout
 		scope.notifications = Notifications
+		scope.position = attributes.position || "bottom"

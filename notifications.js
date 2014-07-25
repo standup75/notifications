@@ -19,7 +19,7 @@
       MESSAGE: 0,
       ALERT: 1,
       messages: {},
-      timeout: 1000,
+      timeout: 100,
       sendMessage: function(msg) {
         return this._addMessage(msg, this.MESSAGE);
       },
@@ -57,14 +57,15 @@
 
   app.directive("notifications", function(Notifications) {
     return {
-      template: "<ul class=\"notifications\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"message.type === notifications.ALERT ? 'alert' : ''\"\n		ng-click=\"notifications.remove(id)\"\n		class=\"notification\"\n		ng-bind=\"message.content\">\n	</li>\n</ul>",
+      template: "<ul class=\"notifications {{position}}\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"{ alert: message.type === notifications.ALERT }\"\n		ng-click=\"notifications.remove(id)\"\n		class=\"notification\"\n		ng-bind=\"message.content\">\n	</li>\n</ul>",
       scope: {},
       restrict: "E",
       link: function(scope, element, attributes) {
         if (attributes.timeout) {
           Notifications.setTimeout(parseInt(attributes.timeout, 10));
         }
-        return scope.notifications = Notifications;
+        scope.notifications = Notifications;
+        return scope.position = attributes.position || "bottom";
       }
     };
   });
