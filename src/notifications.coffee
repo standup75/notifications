@@ -41,7 +41,7 @@ app.directive "notifications", (Notifications) ->
 				ng-class="{ alert: message.type === notifications.ALERT }"
 				ng-click="notifications.remove(id)"
 				class="notification"
-				ng-bind="message.content">
+				ng-bind-html="message.content">
 			</li>
 		</ul>
 	"""
