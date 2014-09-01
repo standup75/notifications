@@ -57,7 +57,7 @@
 
   app.directive("notifications", function(Notifications) {
     return {
-      template: "<ul class=\"notifications {{position}}\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"{ alert: message.type === notifications.ALERT }\"\n		ng-click=\"notifications.remove(id)\"\n		class=\"notification\"\n		ng-bind=\"message.content\">\n	</li>\n</ul>",
+      template: "<ul class=\"notifications {{position}}\">\n	<li\n		ng-repeat=\"(id, message) in notifications.messages\"\n		ng-class=\"{ alert: message.type === notifications.ALERT }\"\n		ng-click=\"notifications.remove(id)\"\n		class=\"notification\"\n		ng-bind-html=\"message.content\">\n	</li>\n</ul>",
       scope: {},
       restrict: "E",
       link: function(scope, element, attributes) {
