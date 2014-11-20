@@ -28,6 +28,12 @@ Usage
 Where `timeout` is the time during which the notification should stay on the screen in ms/char
 and `position` define if the notifications should appear at the top or the bottom of the screen
 
+Set timeout to 0 if you want to leave the message on screen, you can then remove using `remove(id)`:
+
+		var notificationId = Notifications.sendAlert("This is an alert");	
+		...
+		Notifications.remove(notificationId);
+
 And don't forget to add the module to your application
 
 		angular.module("myApp", ["notifications"])
@@ -40,6 +46,12 @@ Then use the Notifications factory to display messages and alerts
 If you need to remove the notification before it expires you can do so by using the notification's id:
 
 		var notificationId = Notifications.sendAlert("This is an alert");
+		...
+		Notifications.remove(notificationId);
+
+If you want to remove the notification manually (no timeout):
+
+		var notificationId = Notifications.sendAlert("This is a persistant alert", true);
 		...
 		Notifications.remove(notificationId);
 

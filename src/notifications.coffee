@@ -12,18 +12,18 @@ app.factory "Notifications", ($timeout) ->
 	ALERT: 1
 	messages: {}
 	timeout: 100
-	sendMessage: (msg) -> @_addMessage msg, @MESSAGE
-	sendAlert: (alert) -> @_addMessage alert, @ALERT
+	sendMessage: (msg, leaveIt) -> @_addMessage msg, @MESSAGE, leaveIt
+	sendAlert: (alert, leaveIt) -> @_addMessage alert, @ALERT, leaveIt
 	setTimeout: (timeout) -> @timeout = timeout
-	_addMessage: (msg, msgType) ->
+	_addMessage: (msg, msgType, leaveIt) ->
 		id = generateUuid()
-		timer = @setTimer id, @timeout * msg.length
+		timer = @_setTimer(id, @timeout * msg.length) if @timeout and !leaveIt
 		@messages[id] =
 			timer: timer
 			content: msg
 			type: msgType
 		id
-	setTimer: (id, duration) ->
+	_setTimer: (id, duration) ->
 		$timeout =>
 			@remove id 
 		, duration
