@@ -3,7 +3,7 @@
 
   app = angular.module("notifications", []);
 
-  app.factory("Notifications", function($timeout) {
+  app.factory("Notifications", function($timeout, $sce) {
     var generateUuid;
     generateUuid = function() {
       var d;
@@ -20,27 +20,29 @@
       ALERT: 1,
       messages: {},
       timeout: 100,
-      sendMessage: function(msg) {
-        return this._addMessage(msg, this.MESSAGE);
+      sendMessage: function(msg, leaveIt) {
+        return this._addMessage(msg, this.MESSAGE, leaveIt);
       },
-      sendAlert: function(alert) {
-        return this._addMessage(alert, this.ALERT);
+      sendAlert: function(alert, leaveIt) {
+        return this._addMessage(alert, this.ALERT, leaveIt);
       },
       setTimeout: function(timeout) {
         return this.timeout = timeout;
       },
-      _addMessage: function(msg, msgType) {
+      _addMessage: function(msg, msgType, leaveIt) {
         var id, timer;
         id = generateUuid();
-        timer = this.setTimer(id, this.timeout * msg.length);
+        if (this.timeout && !leaveIt) {
+          timer = this._setTimer(id, this.timeout * msg.length);
+        }
         this.messages[id] = {
           timer: timer,
-          content: msg,
+          content: $sce.trustAsHtml(msg),
           type: msgType
         };
         return id;
       },
-      setTimer: function(id, duration) {
+      _setTimer: function(id, duration) {
         var _this = this;
         return $timeout(function() {
           return _this.remove(id);

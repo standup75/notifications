@@ -1,6 +1,6 @@
 app = angular.module("notifications", [])
 
-app.factory "Notifications", ($timeout) ->
+app.factory "Notifications", ($timeout, $sce) ->
 	generateUuid = ->
 		d = new Date().getTime()
 		"xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace /[xy]/g, (c) ->
@@ -20,7 +20,7 @@ app.factory "Notifications", ($timeout) ->
 		timer = @_setTimer(id, @timeout * msg.length) if @timeout and !leaveIt
 		@messages[id] =
 			timer: timer
-			content: msg
+			content: $sce.trustAsHtml msg
 			type: msgType
 		id
 	_setTimer: (id, duration) ->
