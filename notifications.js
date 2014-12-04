@@ -82,7 +82,7 @@
         }
         scope.notifications = Notifications;
         scope.position = attributes.position || "bottom";
-        if (attributes.mono) {
+        if (attributes.mode === "mono") {
           return Notifications.setMode("mono");
         }
       }

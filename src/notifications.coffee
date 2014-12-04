@@ -54,4 +54,4 @@ app.directive "notifications", (Notifications) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout
 		scope.notifications = Notifications
 		scope.position = attributes.position || "bottom"
-		Notifications.setMode("mono")  if attributes.mono
+		Notifications.setMode("mono")  if attributes.mode is "mono"
