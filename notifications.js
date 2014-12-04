@@ -29,8 +29,14 @@
       setTimeout: function(timeout) {
         return this.timeout = timeout;
       },
+      setMode: function(mode) {
+        return this.mode = mode;
+      },
       _addMessage: function(msg, msgType, leaveIt) {
         var id, timer;
+        if (this.mode === "mono") {
+          this.clear();
+        }
         id = generateUuid();
         if (this.timeout && !leaveIt) {
           timer = this._setTimer(id, this.timeout * msg.length);
@@ -47,6 +53,14 @@
         return $timeout(function() {
           return _this.remove(id);
         }, duration);
+      },
+      clear: function() {
+        var msg, _results;
+        _results = [];
+        for (msg in this.messages) {
+          _results.push(this.remove(msg.id));
+        }
+        return _results;
       },
       remove: function(id) {
         if (this.messages[id]) {
@@ -67,7 +81,10 @@
           Notifications.setTimeout(parseInt(attributes.timeout, 10));
         }
         scope.notifications = Notifications;
-        return scope.position = attributes.position || "bottom";
+        scope.position = attributes.position || "bottom";
+        if (attributes.mono) {
+          return Notifications.setMode("mono");
+        }
       }
     };
   });
