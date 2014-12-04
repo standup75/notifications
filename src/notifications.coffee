@@ -15,7 +15,9 @@ app.factory "Notifications", ($timeout, $sce) ->
 	sendMessage: (msg, leaveIt) -> @_addMessage msg, @MESSAGE, leaveIt
 	sendAlert: (alert, leaveIt) -> @_addMessage alert, @ALERT, leaveIt
 	setTimeout: (timeout) -> @timeout = timeout
+	setMode: (mode) -> @mode = mode
 	_addMessage: (msg, msgType, leaveIt) ->
+		@clear()  if @mode is "mono"
 		id = generateUuid()
 		timer = @_setTimer(id, @timeout * msg.length) if @timeout and !leaveIt
 		@messages[id] =
@@ -27,6 +29,7 @@ app.factory "Notifications", ($timeout, $sce) ->
 		$timeout =>
 			@remove id 
 		, duration
+	clear: -> @remove(msg.id)  for msg of @messages
 	remove: (id) ->
 		if @messages[id]
 			$timeout.cancel @messages[id].timer
@@ -51,3 +54,4 @@ app.directive "notifications", (Notifications) ->
 		Notifications.setTimeout(parseInt(attributes.timeout, 10)) if attributes.timeout
 		scope.notifications = Notifications
 		scope.position = attributes.position || "bottom"
+		Notifications.setMode("mono")  if attributes.mono

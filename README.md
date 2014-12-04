@@ -28,6 +28,10 @@ Usage
 Where `timeout` is the time during which the notification should stay on the screen in ms/char
 and `position` define if the notifications should appear at the top or the bottom of the screen
 
+If you want to only one notification at a time:
+
+		<notifications timeout="100" position="bottom" mode="mono"></notifications>
+
 Set timeout to 0 if you want to leave the message on screen, you can then remove using `remove(id)`:
 
 		var notificationId = Notifications.sendAlert("This is an alert");	
