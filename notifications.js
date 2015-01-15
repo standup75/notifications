@@ -4,7 +4,7 @@
   app = angular.module("notifications", []);
 
   app.factory("Notifications", function($timeout, $sce) {
-    var crcTable;
+    var crc32, crcTable;
     crcTable = (function() {
       var c, k, n, t;
       c = void 0;
@@ -22,17 +22,17 @@
       }
       return t;
     })();
+    crc32 = function(str) {
+      var crc, i;
+      crc = 0 ^ (-1);
+      i = 0;
+      while (i < str.length) {
+        crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
+        i++;
+      }
+      return (crc ^ (-1)) >>> 0;
+    };
     return {
-      crc32: function(str) {
-        var crc, i;
-        crc = 0 ^ (-1);
-        i = 0;
-        while (i < str.length) {
-          crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
-          i++;
-        }
-        return (crc ^ (-1)) >>> 0;
-      },
       MESSAGE: 0,
       ALERT: 1,
       messages: {},

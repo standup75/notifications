@@ -17,7 +17,7 @@ app.factory "Notifications", ($timeout, $sce) ->
 			n++
 		t
 
-	crc32: (str) ->
+	crc32 = (str) ->
 		crc = 0 ^ (-1)
 		i = 0
 
