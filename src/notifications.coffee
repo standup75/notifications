@@ -1,12 +1,30 @@
 app = angular.module("notifications", [])
 
 app.factory "Notifications", ($timeout, $sce) ->
-	generateUuid = ->
-		d = new Date().getTime()
-		"xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace /[xy]/g, (c) ->
-			r = (d + Math.random() * 16) % 16 | 0
-			d = Math.floor(d / 16)
-			((if c is "x" then r else (r & 0x7 | 0x8))).toString 16
+	crcTable = do ->
+		c = undefined
+		t = []
+		n = 0
+
+		while n < 256
+			c = n
+			k = 0
+
+			while k < 8
+				c = ((if (c & 1) then (0xedb88320 ^ (c >>> 1)) else (c >>> 1)))
+				k++
+			t[n] = c
+			n++
+		t
+
+	crc32: (str) ->
+		crc = 0 ^ (-1)
+		i = 0
+
+		while i < str.length
+			crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff]
+			i++
+		(crc ^ (-1)) >>> 0
 
 	MESSAGE: 0
 	ALERT: 1
@@ -18,22 +36,27 @@ app.factory "Notifications", ($timeout, $sce) ->
 	setMode: (mode) -> @mode = mode
 	_addMessage: (msg, msgType, leaveIt) ->
 		@clear()  if @mode is "mono"
-		id = generateUuid()
-		timer = @_setTimer(id, @timeout * msg.length) if @timeout and !leaveIt
-		@messages[id] =
-			timer: timer
-			content: $sce.trustAsHtml msg
-			type: msgType
+		id = crc32(msg + msgType)
+		if @messages[id]
+			$timeout.cancel @messages[id].timer
+		else
+			@messages[id] =
+				content: $sce.trustAsHtml msg
+				type: msgType
+		@messages[id].timer = @_setTimer(id, @timeout * msg.length) if @timeout and !leaveIt
 		id
 	_setTimer: (id, duration) ->
 		$timeout =>
 			@remove id 
 		, duration
-	clear: -> @remove(msg.id)  for msg of @messages
+	clear: ->
+		@remove(msg.id)  for msg of @messages
+		null
 	remove: (id) ->
 		if @messages[id]
 			$timeout.cancel @messages[id].timer
 			delete @messages[id]
+		null
 
 app.directive "notifications", (Notifications) ->
 
