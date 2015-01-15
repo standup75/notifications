@@ -4,18 +4,35 @@
   app = angular.module("notifications", []);
 
   app.factory("Notifications", function($timeout, $sce) {
-    var generateUuid;
-    generateUuid = function() {
-      var d;
-      d = new Date().getTime();
-      return "xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-        var r;
-        r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === "x" ? r : r & 0x7 | 0x8).toString(16);
-      });
-    };
+    var crcTable;
+    crcTable = (function() {
+      var c, k, n, t;
+      c = void 0;
+      t = [];
+      n = 0;
+      while (n < 256) {
+        c = n;
+        k = 0;
+        while (k < 8) {
+          c = (c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1);
+          k++;
+        }
+        t[n] = c;
+        n++;
+      }
+      return t;
+    })();
     return {
+      crc32: function(str) {
+        var crc, i;
+        crc = 0 ^ (-1);
+        i = 0;
+        while (i < str.length) {
+          crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
+          i++;
+        }
+        return (crc ^ (-1)) >>> 0;
+      },
       MESSAGE: 0,
       ALERT: 1,
       messages: {},
@@ -33,19 +50,22 @@
         return this.mode = mode;
       },
       _addMessage: function(msg, msgType, leaveIt) {
-        var id, timer;
+        var id;
         if (this.mode === "mono") {
           this.clear();
         }
-        id = generateUuid();
-        if (this.timeout && !leaveIt) {
-          timer = this._setTimer(id, this.timeout * msg.length);
+        id = crc32(msg + msgType);
+        if (this.messages[id]) {
+          $timeout.cancel(this.messages[id].timer);
+        } else {
+          this.messages[id] = {
+            content: $sce.trustAsHtml(msg),
+            type: msgType
+          };
         }
-        this.messages[id] = {
-          timer: timer,
-          content: $sce.trustAsHtml(msg),
-          type: msgType
-        };
+        if (this.timeout && !leaveIt) {
+          this.messages[id].timer = this._setTimer(id, this.timeout * msg.length);
+        }
         return id;
       },
       _setTimer: function(id, duration) {
@@ -55,18 +75,18 @@
         }, duration);
       },
       clear: function() {
-        var msg, _results;
-        _results = [];
+        var msg;
         for (msg in this.messages) {
-          _results.push(this.remove(msg.id));
+          this.remove(msg.id);
         }
-        return _results;
+        return null;
       },
       remove: function(id) {
         if (this.messages[id]) {
           $timeout.cancel(this.messages[id].timer);
-          return delete this.messages[id];
+          delete this.messages[id];
         }
+        return null;
       }
     };
   });
