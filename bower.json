@@ -8,8 +8,8 @@
     "url": "git://github.com/standup75/notifications.git"
   },
   "main": "./notifications.js",
-  "version": "0.0.3",
+  "version": "0.0.14",
   "dependencies": {
-    "angular": "^1.2.10"
+    "angular": "~1.4.1"
   }
 }

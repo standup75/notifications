@@ -58,7 +58,7 @@ app.factory "Notifications", ($timeout, $sce) ->
 			delete @messages[id]
 		null
 
-app.directive "notifications", (Notifications) ->
+app.directive "notifications", ($rootScope, Notifications) ->
 
 	template: """
 		<ul class="notifications {{position}}">
@@ -78,3 +78,4 @@ app.directive "notifications", (Notifications) ->
 		scope.notifications = Notifications
 		scope.position = attributes.position || "bottom"
 		Notifications.setMode("mono")  if attributes.mode is "mono"
+		$rootScope.$on "$routeChangeStart", -> Notifications.clear()
