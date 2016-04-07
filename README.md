@@ -12,7 +12,7 @@ Copy the notifications.js and notifications.css file into your project and add t
 
 Alternatively, if you're using bower, you can add this to your component.json (or bower.json):
 
-		"angular-basic-notifications": "~0.0.2"
+		"angular-basic-notifications": "~0.0.15"
 
 And add this to your HTML:
 
@@ -23,6 +23,13 @@ As you can see, I have not written any stylesheet for this module, it's up to yo
 
 Usage
 -----
+
+Include the notification module when you initialize your angular module
+
+		angular.module("myModule", ["notifications", ...])
+
+Then you can use the directive:
+
 		<notifications timeout="100" position="bottom"></notifications>
 
 Where `timeout` is the time during which the notification should stay on the screen in ms/char
